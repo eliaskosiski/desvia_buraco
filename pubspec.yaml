@@ -33,12 +33,12 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flame: ^0.27.0
+  flame: ^0.28.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
-# The following section is specific to Flutter.
+# The following section is specific to Flutter
 flutter:
 
   # The following line ensures that the Material Icons font is
@@ -48,20 +48,10 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/smiley.png
-    - assets/images/dragon.png
-    - assets/images/spaceship.png
-    - assets/images/play-button_left.png
-    - assets/images/play-button_rigth.png  
-    - assets/images/bullet.png
-    - assets/images/explosion-0.png
-    - assets/images/explosion-1.png
-    - assets/images/explosion-2.png
-    - assets/images/explosion-3.png
-    - assets/images/explosion-4.png
-    - assets/images/explosion-5.png
-    - assets/images/explosion-6.png
-    - assets/audio/explosion.mp3
+    - assets/images/buraco.png
+    - assets/images/carro.png
+    - assets/images/rua.png
+
     
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

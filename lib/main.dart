@@ -1,18 +1,16 @@
 // https://flame-engine.org/docs/input.md
 
 import 'dart:math';
-
 import 'package:flame/game.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:game_base/componentes/Spaceship.dart';
+import 'package:game_base/componentes/carro.dart';
 import 'package:game_base/componentes/button_left.dart';
 import 'package:game_base/componentes/button_rigth.dart';
-import 'componentes/Bullet.dart';
-import 'componentes/Dragon.dart';
-import 'componentes/Smyle.dart';
+import 'componentes/buraco.dart';
 import 'package:flame/gestures.dart';
+import 'package:game_base/componentes/fundo.dart';
 
 const DRAGON_SIZE = 40.0;
 
@@ -21,15 +19,12 @@ var game;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Flame.images.loadAll([
-    'smiley.png',
-    'dragon.png',
-    'spaceship.png',
-    'play-button_rigth.png',
-    'play-button_left.png',
-    'bullet.png',
-    'explosion-1.png'
+    'rua.png',
+    'buraco.png',
+    'carro.png'
   ]);
-  Flame.audio.load('explosion.mp3');
+
+
   var dimensions = await Flame.util.initialDimensions();
 
   game = JogoBase(dimensions);
@@ -37,16 +32,15 @@ void main() async {
   runApp(game.widget);
 }
 
-Smyle smyle;
-Dragon dragon;
-Spaceship spaceship;
+Buraco buraco;
+Carro carro;
 ButtonLeft buttonLeft;
 ButtonRigth buttonRigth;
+Fundo fundo;
 
 bool isaAddNave = false;
 bool isAddButton = false;
-List<Dragon> dragonList;
-List<Smyle> smyleList;
+List<Buraco> buracoList;
 var points = 0;
 
 class JogoBase extends BaseGame with TapDetector {
@@ -54,11 +48,12 @@ class JogoBase extends BaseGame with TapDetector {
   Random random = new Random();
 
   JogoBase(this.dimensions) {
-    spaceship = new Spaceship(dimensions);
+    carro = new Carro();
     buttonLeft = new ButtonLeft(dimensions);
     buttonRigth = new ButtonRigth(dimensions);
-    dragonList = <Dragon>[];
-    smyleList = <Smyle>[];
+    fundo = new Fundo(this.dimensions);
+    buracoList = <Buraco>[];
+    add(fundo);
   }
 
   @override
@@ -70,25 +65,18 @@ class JogoBase extends BaseGame with TapDetector {
   @override
   void update(double t) {
     if (!isaAddNave) {
-      add(spaceship);
+      add(carro);
       isaAddNave = true;
     }
 
     creationTimer += t;
-    if (creationTimer >= 0.5) {
+    if (creationTimer >= 1.5) {
       creationTimer = 0.0;
-      int escolha = random.nextInt(2);
-      print(escolha);
-      if (escolha > 0) {
-        smyle = new Smyle(dimensions);
-        smyleList.add(smyle);
-        add(smyle);
-      } else {
-        dragon = new Dragon(dimensions);
-        dragonList.add(dragon);
-        add(dragon);
-      }
+      buraco = new Buraco(dimensions, carro);
+      buracoList.add(buraco);
+      add(buraco);
     }
+    points = carro.score;
 
     print('Placar: $points');
 
@@ -96,33 +84,27 @@ class JogoBase extends BaseGame with TapDetector {
   }
 
   void stopMoving() {
-    spaceship.direction = 0;
+    carro.position = 0;
   }
 
   void movingRight() {
-    spaceship.direction = 1;
+    carro.position = 1;
   }
 
   void movingLeft() {
-    spaceship.direction = -1;
+    carro.position = -1;
   }
 
   @override
   void onTapDown(TapDownDetails details) {
     print(
         "Player tap down on ${details.globalPosition.dx} - ${details.globalPosition.dy}");
-    spaceship.direction = details.globalPosition.dx;
-    tapInput(details.globalPosition);
+    carro.position = details.globalPosition.dx;
   }
 
   @override
   void onTapUp(TapUpDetails details) {
     print(
         "Player tap up on ${details.globalPosition.dx} - ${details.globalPosition.dy}");
-  }
-
-  void tapInput(Offset position) {
-    Bullet bullet = new Bullet(dragonList, smyleList, position);
-    add(bullet);
   }
 }
